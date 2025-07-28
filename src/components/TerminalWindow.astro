@@ -1,0 +1,69 @@
+---
+---
+
+<div class="terminal-window">
+  <div class="title-bar">
+    <div class="buttons">
+      <div class="button red"></div>
+      <div class="button yellow"></div>
+      <div class="button green"></div>
+    </div>
+    <div class="title">bash</div>
+  </div>
+  <div class="content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .terminal-window {
+    background-color: var(--polar-night-0);
+    border: 1px solid var(--polar-night-3);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 2em;
+  }
+
+  .title-bar {
+    background-color: var(--polar-night-1);
+    padding: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .red {
+    background-color: var(--aurora-red);
+  }
+
+  .yellow {
+    background-color: var(--aurora-yellow);
+  }
+
+  .green {
+    background-color: var(--aurora-green);
+  }
+
+  .title {
+    color: var(--snow-storm-0);
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Inconsolata", monospace;
+  }
+
+  .content {
+    padding: 1.5em;
+  }
+</style>

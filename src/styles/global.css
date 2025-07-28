@@ -5,8 +5,25 @@
  */
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
+	--polar-night-0: #2E3440;
+	--polar-night-1: #3B4252;
+	--polar-night-2: #434C5E;
+	--polar-night-3: #4C566A;
+	--snow-storm-0: #D8DEE9;
+	--snow-storm-1: #E5E9F0;
+	--snow-storm-2: #ECEFF4;
+	--frost-0: #8FBCBB;
+	--frost-1: #88C0D0;
+	--frost-2: #81A1C1;
+	--frost-3: #5E81AC;
+	--aurora-red: #BF616A;
+	--aurora-orange: #D08770;
+	--aurora-yellow: #EBCB8B;
+	--aurora-green: #A3BE8C;
+	--aurora-purple: #B48EAD;
+
+	--accent: var(--frost-3);
+	--accent-dark: var(--frost-2);
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
@@ -17,29 +34,28 @@
 		rgba(var(--gray), 33%);
 }
 @font-face {
-	font-family: "Atkinson";
-	src: url("/fonts/atkinson-regular.woff") format("woff");
+	font-family: "Inconsolata";
+	src: url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 @font-face {
-	font-family: "Atkinson";
-	src: url("/fonts/atkinson-bold.woff") format("woff");
+	font-family: "Inconsolata";
+	src: url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap") format("woff2");
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
 body {
-	font-family: "Atkinson", sans-serif;
+	font-family: "Inconsolata", monospace;
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
+	background: var(--polar-night-0);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
+	color: var(--snow-storm-2);
 	font-size: 20px;
 	line-height: 1.7;
 }
@@ -56,7 +72,7 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
+	color: var(--frost-1);
 	line-height: 1.2;
 }
 h1 {
@@ -82,7 +98,7 @@ a {
 	color: var(--accent);
 }
 a:hover {
-	color: var(--accent);
+	color: var(--accent-dark);
 }
 p {
 	margin-bottom: 1em;
@@ -93,26 +109,41 @@ p {
 textarea {
 	width: 100%;
 	font-size: 16px;
+	background-color: var(--polar-night-1);
+	color: var(--snow-storm-2);
+	border: 1px solid var(--accent);
 }
 input {
 	font-size: 16px;
+	background-color: var(--polar-night-1);
+	color: var(--snow-storm-2);
+	border: 1px solid var(--accent);
 }
 table {
 	width: 100%;
+	border-collapse: collapse;
+}
+th, td {
+	border: 1px solid var(--accent);
+	padding: 8px;
 }
 img {
 	max-width: 100%;
 	height: auto;
 	border-radius: 8px;
+	border: 1px solid var(--accent);
 }
 code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
+	background-color: var(--polar-night-1);
 	border-radius: 2px;
+	color: var(--aurora-green);
 }
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
+	background-color: var(--polar-night-1);
+	border: 1px solid var(--accent);
 }
 pre > code {
 	all: unset;
@@ -122,10 +153,11 @@ blockquote {
 	padding: 0 0 0 20px;
 	margin: 0px;
 	font-size: 1.333em;
+	color: var(--frost-2);
 }
 hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
+	border-top: 1px solid var(--accent);
 }
 @media (max-width: 720px) {
 	body {
