@@ -53,6 +53,20 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
+## Cheatsheet
+
+### Creating a New Blog Post
+
+1.  Create a new `.md` or `.mdx` file in the `src/content/blog/` directory.
+2.  Add frontmatter to the top of the file, including `title`, `description`, and `pubDate`.
+3.  Write your blog post content using Markdown or MDX.
+
+### Adding a Sidebar
+
+1.  Create a new component in the `src/components/` directory (e.g., `Sidebar.astro`).
+2.  Add your sidebar content to the new component.
+3.  Import and add the sidebar component to your layout file (e.g., `src/layouts/BlogPost.astro`).
+
 ## 👀 Want to learn more?
 
 Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

@@ -1,29 +1,36 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import TerminalWindow from '../components/TerminalWindow.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const renderedPosts = await Promise.all(
+  posts.map(async (post) => {
+    const { Content } = await post.render();
+    return {
+      ...post,
+      Content,
+    };
+  })
+);
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<TerminalWindow>
-				<h1>Welcome to my blog!</h1>
-				<p>
-					This is a space where I write about DevOps, cloud computing, Linux, and other related topics.
-				</p>
-				<p>
-					I hope you find the content here useful. Feel free to look around and check out the blog posts.
-				</p>
-			</TerminalWindow>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <TerminalWindow posts={renderedPosts} />
+    </main>
+    <Footer />
+  </body>
 </html>

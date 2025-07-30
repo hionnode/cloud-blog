@@ -4,7 +4,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import TerminalWindow from '../components/TerminalWindow.astro';
+import Sidebar from '../components/Sidebar.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -15,6 +15,13 @@ const { title, description, pubDate, updatedDate } = Astro.props;
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
+			.container {
+				display: flex;
+				gap: 2em;
+			}
+			.main-content {
+				flex-grow: 1;
+			}
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
@@ -31,7 +38,7 @@ const { title, description, pubDate, updatedDate } = Astro.props;
 			.title h1 {
 				margin: 0 0 0.5em 0;
 			}
-			.date {
+			.post-meta {
 				margin-bottom: 0.5em;
 				color: var(--snow-storm-0);
 			}
@@ -44,27 +51,32 @@ const { title, description, pubDate, updatedDate } = Astro.props;
 	<body>
 		<Header />
 		<main>
-			<article>
-				<TerminalWindow>
-					<div class="prose">
-						<div class="title">
-							<div class="date">
-								<FormattedDate date={pubDate} />
-								{
-									updatedDate && (
-										<div class="last-updated-on">
-											Last updated on <FormattedDate date={updatedDate} />
-										</div>
-									)
-								}
+			<div class="container">
+				<div class="main-content">
+					<article>
+						<div class="prose">
+							<div class="title">
+								<p class="post-meta">
+									<FormattedDate date={pubDate} />
+									{
+										updatedDate && (
+											<div class="last-updated-on">
+												Last updated on <FormattedDate date={updatedDate} />
+											</div>
+										)
+									}
+								</p>
+								<h1>{title}</h1>
+								<hr />
 							</div>
-							<h1>{title}</h1>
-							<hr />
+							<div class="post-body">
+								<slot />
+							</div>
 						</div>
-						<slot />
-					</div>
-				</TerminalWindow>
-			</article>
+					</article>
+				</div>
+				<Sidebar />
+			</div>
 		</main>
 		<Footer />
 	</body>

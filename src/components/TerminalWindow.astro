@@ -1,27 +1,142 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
+
+interface Props {
+  posts: (CollectionEntry<"blog"> & { Content: any })[];
+}
+
+const { posts } = Astro.props;
 ---
 
-<div class="terminal-window">
+<div class="terminal-window glass">
   <div class="title-bar">
     <div class="buttons">
       <div class="button red"></div>
       <div class="button yellow"></div>
       <div class="button green"></div>
     </div>
-    <div class="title">bash</div>
+    <div class="title">blog</div>
   </div>
   <div class="content">
-    <slot />
+    <div class="pane left">
+      <ul id="post-list">
+        {
+          posts.map((post, index) => (
+            <li class={`post-item ${index === 0 ? "active" : ""}`}>
+              <a href={`/blog/${post.slug}/`}>
+                <span class="post-title">{post.data.title}</span>
+                <span class="post-date">
+                  <FormattedDate date={post.data.pubDate} />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="pane right">
+      <div id="post-content">
+        <div class="post-header">
+          <h1 id="post-title" class="post-title"></h1>
+          <div id="post-meta" class="post-meta"></div>
+        </div>
+        <div id="post-body" class="post-body"></div>
+      </div>
+    </div>
   </div>
 </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const postList = document.getElementById("post-list");
+    const postItems = postList?.getElementsByTagName("li");
+    const postContent = document.getElementById("post-content");
+    const postTitle = document.getElementById("post-title");
+    const postMeta = document.getElementById("post-meta");
+    const postBody = document.getElementById("post-body");
+
+    const posts = Astro.props.posts;
+
+    let activeIndex = 0;
+
+    const setActivePost = (index: number) => {
+      if (postItems && postContent && postTitle && postMeta && postBody) {
+        for (let i = 0; i < postItems.length; i++) {
+          postItems[i].classList.remove("active");
+        }
+        postItems[index].classList.add("active");
+
+        const currentPost = posts[index];
+        postTitle.textContent = currentPost.data.title;
+        postMeta.innerHTML = `
+          <p class="post-meta">
+            <time datetime="${currentPost.data.pubDate.toISOString()}">
+              ${new Date(currentPost.data.pubDate).toLocaleDateString("en-us", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </time>
+            ${
+              currentPost.data.updatedDate
+                ? `
+                  <div class="last-updated-on">
+                    Last updated on <time datetime="${currentPost.data.updatedDate.toISOString()}">
+                      ${new Date(currentPost.data.updatedDate).toLocaleDateString("en-us", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </time>
+                  </div>
+                `
+                : ""
+            }
+          </p>
+        `;
+        postBody.innerHTML = currentPost.Content.innerHTML;
+      }
+    };
+
+    setActivePost(activeIndex);
+
+    if (postItems) {
+      for (let i = 0; i < postItems.length; i++) {
+        postItems[i].addEventListener("click", (event) => {
+          event.preventDefault();
+          activeIndex = i;
+          setActivePost(activeIndex);
+        });
+      }
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (postItems) {
+        if (event.key === "j") {
+          activeIndex = (activeIndex + 1) % postItems.length;
+          setActivePost(activeIndex);
+        } else if (event.key === "k") {
+          activeIndex =
+            (activeIndex - 1 + postItems.length) % postItems.length;
+          setActivePost(activeIndex);
+        } else if (event.key === "Enter") {
+          const postLink = postItems[activeIndex].getElementsByTagName("a")[0];
+          window.location.href = postLink.href;
+        }
+      }
+    });
+  });
+</script>
+
 <style>
   .terminal-window {
-    background-color: var(--polar-night-0);
-    border: 1px solid var(--polar-night-3);
     border-radius: 8px;
     box-shadow: var(--box-shadow);
     margin-bottom: 2em;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
   }
 
   .title-bar {
@@ -31,6 +146,7 @@
     border-top-right-radius: 8px;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
   }
 
   .buttons {
@@ -64,6 +180,91 @@
   }
 
   .content {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .pane {
     padding: 1.5em;
+    overflow-y: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .left {
+    width: 30%;
+    border-right: 1px solid var(--polar-night-3);
+  }
+
+  .right {
+    width: 70%;
+    position: relative;
+  }
+
+  .loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--snow-storm-0);
+    font-size: 1.2em;
+    display: none;
+  }
+
+  #post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-item a {
+    display: block;
+    padding: 0.5em;
+    text-decoration: none;
+    color: var(--snow-storm-0);
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .post-item a:hover {
+    background-color: var(--polar-night-3);
+  }
+
+  .post-item.active a {
+    background-color: var(--polar-night-2);
+  }
+
+  .post-item.active .post-title::after {
+    content: "_";
+    animation: blink 1s step-end infinite;
+    margin-left: 5px;
+  }
+
+  .post-title {
+    font-weight: bold;
+  }
+
+  .post-date {
+    display: block;
+    font-size: 0.8em;
+    color: var(--polar-night-4);
+  }
+
+  .post-header {
+    margin-bottom: 1em;
+  }
+
+  .post-title {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .post-meta {
+    font-size: 0.9em;
+    color: var(--polar-night-4);
+  }
+
+  .post-body {
+    line-height: 1.6;
   }
 </style>
